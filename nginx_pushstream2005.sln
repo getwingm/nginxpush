@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nginx_pushstream2005", "nginx_pushstream2005.vcproj", "{AA5C354E-53B2-41D0-AD48-8440607EE430}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA5C354E-53B2-41D0-AD48-8440607EE430}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA5C354E-53B2-41D0-AD48-8440607EE430}.Debug|Win32.Build.0 = Debug|Win32
+		{AA5C354E-53B2-41D0-AD48-8440607EE430}.Release|Win32.ActiveCfg = Release|Win32
+		{AA5C354E-53B2-41D0-AD48-8440607EE430}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
