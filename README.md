@@ -17,3 +17,6 @@ cp ../nginx-push-stream-module-0.3.5/misc/nginx-sjk.conf /usr/local/nginx/
 运行程序
 cd /usr/local/nginx
 sbin/nginx -c nginx-sjk.conf
+
+检查nginx是否已经运行起来。
+ps -ef|grep nginx
