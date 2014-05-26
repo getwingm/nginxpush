@@ -247,66 +247,6 @@ ngx_http_push_stream_subscriber_polling_handler(ngx_http_request_t *r, ngx_http_
         }
     }
 
-	//begin by xinlu
-	if(longpolling && !has_message_to_send && !hit_old_message && count_of_old_message > 0)
-	{
-		/*
-		if_modified_since没有命中队列中已经存在的消息，则说明时间戳比队列中的时间戳还要大，是异常情况。
-		重置时间，使其获取队列中第一条消息。
-		*/
-		cur = channels_ids;
-		if_modified_since = 0;
-		tag = 0;
-		greater_message_time = 0;
-		greater_message_tag = 0;
-		while ((cur = (ngx_http_push_stream_requested_channel_t *) ngx_queue_next(&cur->queue)) != channels_ids) {
-			time_t next_greater_message_time = greater_message_time;//add by xinlu
-			ngx_int_t next_greater_message_tag = greater_message_tag;//add by xinlu
-
-			channel = ngx_http_push_stream_find_channel(cur->id, r->connection->log);
-			if (channel == NULL) {
-				// channel not found
-				ngx_shmtx_unlock(&shpool->mutex);
-				ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "push stream module: unable to allocate shared memory for channel %s", cur->id->data);
-				return NGX_HTTP_INTERNAL_SERVER_ERROR;
-			}
-
-			if (ngx_http_push_stream_has_old_messages_to_send(channel, cur->backtrack_messages, if_modified_since, tag, greater_message_time, greater_message_tag, last_event_id, &next_greater_message_time, &next_greater_message_tag) >= 2) 
-			{
-				/*
-				if (channel->last_message_time > greater_message_time) 
-				{
-					greater_message_time = channel->last_message_time;
-					greater_message_tag = channel->last_message_tag;
-				} else {
-					if ((channel->last_message_time == greater_message_time) && (channel->last_message_tag > greater_message_tag) ) {
-						greater_message_tag = channel->last_message_tag;
-					}
-				}
-				*/
-				if(!has_message_to_send)
-				{
-					greater_message_tag = next_greater_message_tag;
-					greater_message_time = next_greater_message_time;
-				}
-				else
-				{
-					if(greater_message_time > next_greater_message_time)
-					{
-						greater_message_time = next_greater_message_time;
-						greater_message_tag = next_greater_message_tag;
-					}
-					else if(greater_message_time == next_greater_message_time && greater_message_tag > next_greater_message_tag)
-					{
-						greater_message_tag = next_greater_message_tag;
-					}
-				}
-				has_message_to_send++;
-			}
-		}
-	}
-	//end by xinlu
-
     if (longpolling && !has_message_to_send) {
         // long polling mode without messages
         if ((worker_subscriber = ngx_http_push_stream_subscriber_prepare_request_to_keep_connected(r)) == NULL) {
