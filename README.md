@@ -7,7 +7,16 @@ nginxpush
 编译命令如下：
 
 cd nginx-1.4.7
+
+如果安装了pcre库，则如下
+./configure --add-module=../nginx-push-stream-module-0.3.5 --add-module=../lua-nginx-module-0.9.3
+
+有报pcre库连接错误，则
+./configure --add-module=../nginx-push-stream-module-0.3.5 --add-module=../lua-nginx-module-0.9.3 --with-pcre=../pcre-8.35
+
+还有错，再试
 ./configure --add-module=../nginx-push-stream-module-0.3.5 --add-module=../lua-nginx-module-0.9.3 --with-pcre=../pcre-8.35 --with-pcre-jit
+
 make install
 
 cp ../nginx-push-stream-module-0.3.5/misc/nginx-sjk.conf /usr/local/nginx/
