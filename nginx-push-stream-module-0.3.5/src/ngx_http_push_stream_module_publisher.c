@@ -198,6 +198,7 @@ ngx_http_push_stream_publisher_body_handler(ngx_http_request_t *r)
 
 	push_text_body = ngx_http_push_stream_str_replace(buf->pos, (u_char *)"\r\n", (u_char *)"", 0, r->pool);
 	push_text_body = ngx_http_push_stream_str_replace(push_text_body, (u_char *)"\n", (u_char *)"", 0, r->pool);
+	push_text_body = ngx_http_push_stream_str_replace(push_text_body, (u_char *)"\t", (u_char *)"", 0, r->pool);
 
 	channel = ngx_http_push_stream_add_msg_to_channel(r, id, push_text_body, ngx_strlen(push_text_body), event_id, event_type, r->pool);
 	//channel = ngx_http_push_stream_add_msg_to_channel(r, id, buf->pos, ngx_buf_size(buf), event_id, event_type, r->pool);
