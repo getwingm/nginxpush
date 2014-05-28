@@ -303,11 +303,10 @@ ngx_http_push_stream_add_msg_to_channel(ngx_http_request_t *r, ngx_str_t *id, u_
 
 	if(channel->last_message_time >= ngx_time())
 	{
+		ngx_str_t text = ngx_string("--------error-----\r\npush stream module: ngx_time is the same to channel last message, so try again for 2s later.");
+		ngx_str_t type = ngx_string("text/plain");
 		ngx_shmtx_unlock(&(shpool)->mutex);
-		ngx_http_push_stream_send_response(r, 
-			ngx_string("--------error-----\r\npush stream module: ngx_time is the same to channel last message, so try again for 2s later."), 
-			ngx_string("text/plain"), 
-			NGX_HTTP_OK);
+		ngx_http_push_stream_send_response(r, &text, &type, NGX_HTTP_OK);
 		ngx_log_error(NGX_LOG_ALERT, (r)->connection->log, 0, "push stream module: ngx_time is the same to channel last message, so try again for 2s later.");
 		return NULL;
 	}
