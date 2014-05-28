@@ -92,6 +92,8 @@ typedef struct {
     ngx_str_t                       padding_by_user_agent;
     ngx_http_push_stream_padding_t *paddings;
     ngx_str_t                       allowed_origins;
+
+	time_t							global_last_message_time;//add by xinlu,确保所有通道的消息时间戳不会同样。
 } ngx_http_push_stream_loc_conf_t;
 
 // shared memory segment name
