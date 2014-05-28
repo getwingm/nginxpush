@@ -301,6 +301,17 @@ ngx_http_push_stream_add_msg_to_channel(ngx_http_request_t *r, ngx_str_t *id, u_
         return NULL;
     }
 
+	if(channel->last_message_time >= ngx_time())
+	{
+		ngx_shmtx_unlock(&(shpool)->mutex);
+		ngx_http_push_stream_send_response(r, 
+			ngx_string("--------error-----\r\npush stream module: ngx_time is the same to channel last message, so try again for 2s later."), 
+			ngx_string("text/plain"), 
+			NGX_HTTP_OK);
+		ngx_log_error(NGX_LOG_ALERT, (r)->connection->log, 0, "push stream module: ngx_time is the same to channel last message, so try again for 2s later.");
+		return NULL;
+	}
+
     // create a buffer copy in shared mem
     msg = ngx_http_push_stream_convert_char_to_msg_on_shared_locked(text, len, channel, channel->last_message_id + 1, event_id, event_type, temp_pool);
     if (msg == NULL) {

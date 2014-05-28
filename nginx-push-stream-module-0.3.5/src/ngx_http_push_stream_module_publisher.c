@@ -141,6 +141,8 @@ ngx_http_push_stream_publisher_body_handler(ngx_http_request_t *r)
     ssize_t                                 n;
     off_t                                   len;
 
+	u_char								   *push_text_body=NULL;
+
     // check if body message wasn't empty
     if (r->headers_in.content_length_n <= 0) {
         ngx_log_error(NGX_LOG_ERR, (r)->connection->log, 0, "push stream module: Post request was sent with no message");
@@ -193,7 +195,11 @@ ngx_http_push_stream_publisher_body_handler(ngx_http_request_t *r)
     event_id = ngx_http_push_stream_get_header(r, &NGX_HTTP_PUSH_STREAM_HEADER_EVENT_ID);
     event_type = ngx_http_push_stream_get_header(r, &NGX_HTTP_PUSH_STREAM_HEADER_EVENT_TYPE);
 
-    channel = ngx_http_push_stream_add_msg_to_channel(r, id, buf->pos, ngx_buf_size(buf), event_id, event_type, r->pool);
+	push_text_body = ngx_http_push_stream_str_replace(buf->pos, "\r\n", "", 0, r->pool);
+	push_text_body = ngx_http_push_stream_str_replace(push_text_body, "\n", "", 0, r->pool);
+
+	channel = ngx_http_push_stream_add_msg_to_channel(r, id, push_text_body, ngx_strlen(push_text_body), event_id, event_type, r->pool);
+	//channel = ngx_http_push_stream_add_msg_to_channel(r, id, buf->pos, ngx_buf_size(buf), event_id, event_type, r->pool);
     if (channel == NULL) {
         ngx_http_finalize_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
         return;
