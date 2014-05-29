@@ -301,7 +301,7 @@ ngx_http_push_stream_add_msg_to_channel(ngx_http_request_t *r, ngx_str_t *id, u_
         return NULL;
     }
 
-	if(cf->global_last_message_time >= ngx_time())
+	if(data->last_message_time >= ngx_time())
 	{
 		ngx_str_t text = ngx_string("--------error-----\r\npush stream module: ngx_time is the same to channel last message, so try again for 2s later.");
 		ngx_str_t type = ngx_string("text/plain");
@@ -328,8 +328,6 @@ ngx_http_push_stream_add_msg_to_channel(ngx_http_request_t *r, ngx_str_t *id, u_
     // set message expiration time
     msg->expires = msg->time + ngx_http_push_stream_module_main_conf->message_ttl;
     channel->last_activity_time = ngx_time();
-
-	cf->global_last_message_time = msg->time;//确保当前全局时间是唯一的时间。
 
     // put messages on the queue
     if (cf->store_messages) {

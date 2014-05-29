@@ -558,8 +558,6 @@ ngx_http_push_stream_create_loc_conf(ngx_conf_t *cf)
     lcf->padding_by_user_agent.data = NULL;
     lcf->paddings = NULL;
     lcf->allowed_origins.data = NULL;
-	lcf->global_last_message_time = 0;
-
     return lcf;
 }
 
